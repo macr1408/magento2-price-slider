@@ -30,7 +30,7 @@ require([
     'domReady!'
 ], function($){
 //     `use strict`;
-    console.log("Price Slider..!");
+    //console.log("Price Slider..!");
 //require(["jquery" , "jquery/jquery-ui"], function($){
     // ...
     $("div#price-slider").slider({
@@ -39,24 +39,39 @@ require([
 			max: <?=$range['max']?>,
 			values: [ <?=$range['min']?>, <?=$range['max']?> ],
 			slide: function( event, ui ) {
-				$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+				$( "#amount-desde" ).val( ui.values[ 0 ] );
+				$( "#amount-hasta" ).val( ui.values[ 1 ] );
 			},
 			change: function( event, ui ) {
+                console.log(ui.values[0]+"~"+ui.values[1]);
+                if(ui.values[0] == <?=$range['min']?> && ui.values[1] == <?=$range['max']?> ) {
+                    $( "#price-filter-query" ).prop('disabled', true);
+                } else {
+                    $( "#price-filter-query" ).prop('disabled', false);
+                }
 				//alert(ui.values[0]+"~"+ui.values[1]);
-				window.location.href = price_url+ui.values[0]+"-"+ui.values[1];
 			}
 		});
-		$( "#amount" ).val( "$" + $( "#price-slider" ).slider( "values", 0 ) +
-			" - $" + $( "#price-slider" ).slider( "values", 1 ) );
+    console.log(<?=$range['min']?>+"~"+<?=$range['max']?>);
+	$( "#amount-desde" ).val( $( "#price-slider" ).slider( "values", 0 ) ).keyup(function(){ $( "#price-slider" ).slider( "values", 0, $( "#amount-desde" ).val() ) });
+    $( "#amount-hasta" ).val( $( "#price-slider" ).slider( "values", 1 ) ).keyup(function(){ $( "#price-slider" ).slider( "values", 1, $( "#amount-hasta" ).val() ) });
+    $( "#price-filter-query" ).click(function() {
+        if(price_url.indexOf("?") === -1){
+		    window.location.href = price_url+"?price="+$( "#amount-desde" ).val()+"-"+$( "#amount-hasta" ).val();        
+        }else{
+            //var temp = price_url.split("?");
+		    window.location.href = price_url+"&price="+$( "#amount-desde" ).val()+"-"+$( "#amount-hasta" ).val();        
+        }
+    });
 });
 </script>
 <?php 
-?>      
+?>  
+<div id="price-slider"></div>    
 <p>
-	<label for="amount">Price range:</label>
-	<input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+	<span>desde </span><input type="number" id="amount-desde"><span> hasta </span><input type="number" id="amount-hasta">
 </p>
-<div id="price-slider"></div>
+<button id="price-filter-query" disabled>FILTRAR</button>
 
 <?php else:?>
 <ol class="items">

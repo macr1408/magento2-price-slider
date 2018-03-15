@@ -26,16 +26,17 @@ class FilterRenderer extends \Magento\LayeredNavigation\Block\Navigation\FilterR
 
     public function getPriceRange($filter){
     	$Filterprice = array('min' => 0 , 'max'=>0);
-    	if($filter instanceof Magento\CatalogSearch\Model\Layer\Filter\Price){
+    	if($filter instanceof \Magento\CatalogSearch\Model\Layer\Filter\Price){
 			$priceArr = $filter->getResource()->loadPrices(10000000000);
      		$Filterprice['min'] = reset($priceArr);
-     		$Filterprice['max'] = end($priceArr);
+     		$Filterprice['max'] = end($priceArr)+1;
     	}
     	return $Filterprice;
     }
 
     public function getFilterUrl($filter){
-    		$query = ['price'=> ''];
+    		//$query = ['price'=> ''];
+    		$query = [];
     	 return $this->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true, '_query' => $query]);
     }
 }
