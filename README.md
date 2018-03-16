@@ -1,4 +1,8 @@
 # magento2-price-slider
+
+### Credits to:
+Ecomerciar for the help in the making of this update.
+
 <h3>Features:</h3>
 <ul>
 <li>Price Slider on Category List Page </li>
